@@ -4,28 +4,20 @@ package hall
 
 import (
 	"fmt"
+	"github.com/yangsf5/card/app/engine/net"
 	"github.com/yangsf5/card/app/logic/proto"
 )
 
-type User interface {
-	Send(string)
-}
-
 var (
-	users map[string] User
-
-	broadcast chan string
+	group *net.Group
 )
 
 func init() {
-	users = make(map[string] User)
-	broadcast = make(chan string)
-
-	go Tick()
+	group = net.NewGroup()
 }
 
-func Enter(uid string, u User) bool {
-	ret := AddUser(uid, u)
+func Enter(uid string, u net.User) bool {
+	ret := group.AddUser(uid, u)
 	if ret {
 		msg := &proto.HCRoomList{}
 		for k, _ := range configs {
@@ -39,29 +31,10 @@ func Enter(uid string, u User) bool {
 	return ret
 }
 
-func AddUser(uid string, u User) bool {
-	if _, ok := users[uid]; ok {
-		return false
-	}
-	users[uid] = u
-	return true
+func Broadcast(msg string) {
+	group.Broadcast(msg)
 }
 
 func DelUser(uid string) {
-	delete(users, uid)
+	group.DelUser(uid)
 }
-
-func Broadcast(msg string) {
-	broadcast <- msg
-}
-
-func Tick() {
-	for {
-		msg := <-broadcast
-		fmt.Println("Hall broadcast msg:", msg)
-		for _, u := range users {
-			u.Send(msg)
-		}
-	}
-}
-
