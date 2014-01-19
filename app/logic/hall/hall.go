@@ -21,7 +21,7 @@ func Enter(uid string, u net.User) bool {
 	if ret {
 		msg := &proto.HCRoomList{}
 		for k, _ := range configs {
-			protoRoom := proto.Room{k, 0, fmt.Sprintf("/room/default?room=%s&user=%s", k, uid)}
+			protoRoom := proto.Room{k, 0, fmt.Sprintf("#")}
 			msg.Rooms = append(msg.Rooms, protoRoom)
 		}
 

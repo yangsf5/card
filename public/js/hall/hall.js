@@ -14,7 +14,7 @@ msgHandles['HCRoomList'] = function(msg) {
   var rooms = $('#panel-roomlist');
   rooms.empty();
   $.each(msg.Rooms, function(index, room) {
-    rooms.append('<a href="' + room.Href + '" target="_blank">' + room.Name + '</a>' + '  <span class="badge">' + room.OnlineCount + '</span>');
+    rooms.append('<a href="' + room.Href + '">' + room.Name + '</a>' + '  <span class="badge">' + room.OnlineCount + '</span>');
     rooms.append('<br>');
   });
 };
