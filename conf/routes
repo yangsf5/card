@@ -21,4 +21,3 @@ WS	/hall/hall/socket			Hall.Socket
 
 # Room
 Get	/room/default				Room.Default
-Get	/table/defaut				Table.Default

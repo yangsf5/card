@@ -22,11 +22,14 @@ msgHandles['HCRoomList'] = function(msg) {
 $(document).ready(function() {
   connect();
 
-  var btn_test = $('#btn-test');
-  btn_test.click(function() {
-    var content = btn_test.text(); 
-    socket.send(content);
-    return false;
+  var btn_chat = $('#btn-chat');
+  $.each(btn_chat.children(), function(_, item) {
+    var item = $(item);
+    item.click(function() {
+      var content = item.text(); 
+      socket.send(content);
+      return false;
+    });
   });
 });
 
