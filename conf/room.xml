@@ -5,11 +5,15 @@
 		<item name="LinkGame"/>
 	</type>
 
-	<game name="FiveChess">
+	<game name="对战模式">
 		<item name="playerCount" value="2"/>
 	</game>
 
-	<game name="LinkGame">
+	<game name="练习模式">
+		<item name="playerCount" value="5"/>
+	</game>
+
+	<game name="竞技模式">
 		<item name="playerCount" value="5"/>
 	</game>
 </room>
