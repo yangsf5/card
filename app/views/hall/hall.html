@@ -1,0 +1,47 @@
+{{set . "title" "Hall"}}
+{{template "header.html" .}}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-2">Login as <strong id="userName">{{.user}}</strong></div>
+    <div class="col-md-4">
+      <p><a href="/">Leave the hall</a></p>
+    </div>
+  </div>
+</div>
+
+<p></p>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-1">
+      <p><button type="submit" class="btn btn-primary btn-lg" id="btn-test">test</button><p>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Room list</h3>
+        </div>
+        <div class="panel-body" id="panel-roomlist">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Chat or Event</h3>
+        </div>
+        <div class="panel-body" id="panel-chat">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<script src="/public/js/hall/hall.js" type="text/javascript" charset="utf-8"></script>
+
+{{template "footer.html" .}}
