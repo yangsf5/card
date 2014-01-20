@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config name="card config">
+	<hero name="可尼">
+		<card name="石化" value="2"/>
+		<card name="泪奔" value="2"/>
+		<card name="装地鼠" value="2"/>
+	</hero>
+
+	<hero name="布朗">
+		<card name="读可尼" value="5"/>
+	</hero>
+
+	<hero name="穆恩">
+		<card name="狂躁" value="5"/>
+	</hero>
+
+	<hero name="詹姆斯">
+		<card name="飞吻" value="5"/>
+	</hero>
+
+	<hero name="中立">
+		<card name="冷兔拼死护住萝卜" value="5"/>
+	</hero>
+</config>
+
