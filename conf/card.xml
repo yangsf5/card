@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config name="card config">
+	<attackType>
+		<item name="ATK_ENEMY" desc="只能攻击敌人"/>
+		<item name="ATK_ALL" desc="可以攻击任何角色"/>
+	</attackType>
 	<hero name="可尼">
-		<card name="石化" value="2"/>
-		<card name="泪奔" value="2"/>
+		<card name="石化" costMP="0" attack="0" HP="2" desc="卖萌+防御"/>
+		<card name="泪奔" costMP="1" attack="0" HP="1" desc="哭泣的可尼，踩扁一切，对所有其他随从造成1点伤害"/>
 		<card name="装地鼠" value="2"/>
 	</hero>
 
