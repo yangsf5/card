@@ -3,41 +3,29 @@
 package room
 
 import (
+	"github.com/yangsf5/card/app/engine/net"
 	"github.com/yangsf5/card/app/logic/user"
 )
 
 func init() {
 }
 
-type Room struct {
-	Users map[string] *user.User
+type FightRoom struct {
+	net.Group
 }
 
-func NewRoom() *Room {
-	room := &Room{}
-	room.Users = make(map[string] *user.User)
+func NewFightRoom() *FightRoom {
+	room := &FightRoom{}
 	return room
 }
 
-func (r *Room) AddUser(u *user.User) {
-	if u == nil {
-		return
+func (r *FightRoom) Enter(uid string, u net.User) bool {
+	ret := r.AddUser(uid, u)
+	if ret {
 	}
-	if _, ok := r.Users[u.Name]; ok {
-		return
-	}
-	r.Users[u.Name] = u
+	return ret
 }
 
-func (r *Room) DelUser(u *user.User) {
-	if u == nil {
-		return
-	}
-	delete(r.Users, u.Name)
+func (r *FightRoom) Leave(uid string) bool {
+	r.DelUser(uid)
 }
-
-func (r *Room) Tick() {
-	for {
-	}
-}
-

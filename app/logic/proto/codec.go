@@ -23,3 +23,11 @@ func Encode(v interface{}) string {
 	}
 	return string(b)
 }
+
+func Decode(str string) *Pack {
+	pack := &Pack{}
+	if err := json.Unmarshal([]byte(str), pack); err != nil {
+		panic(err)
+	}
+	return pack
+}
