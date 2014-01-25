@@ -20,5 +20,8 @@ func TestCodec(t *testing.T) {
 
 	// Decode
 	d2 := Decode(str)
+	if d2.Type != "data" {
+		t.Fail()
+	}
 	fmt.Println(d2)
 }
