@@ -33,6 +33,10 @@ func (g *Group) DelUser(uid string) {
 	delete(g.users, uid)
 }
 
+func (g *Group) GetUsers() map[string] User{
+	return g.users
+}
+
 func (g *Group) Broadcast(msg string) {
 	g.broadcast <- msg
 }
