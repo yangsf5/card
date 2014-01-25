@@ -1,5 +1,5 @@
 /*
- * @author sheppard(ysf1026@gmail.com) 2014-01-02
+ * @author sheppard(ysf1027@gmail.com) 2014-01-02
  */
 
 var socket;
@@ -12,11 +12,12 @@ msgHandles['HCChat'] = function(msg) {
 };
 msgHandles['HCRoomList'] = function(msg) {
   var rooms = $('#panel-roomlist');
-  rooms.empty();
+  /*
   $.each(msg.Rooms, function(index, room) {
     rooms.append('<a href="' + room.Href + '">' + room.Name + '</a>' + '  <span class="badge">' + room.OnlineCount + '</span>');
     rooms.append('<br>');
   });
+  */
 };
 
 $(document).ready(function() {
@@ -26,10 +27,24 @@ $(document).ready(function() {
   $.each(btn_chat.children(), function(_, item) {
     var item = $(item);
     item.click(function() {
-      var content = item.text(); 
-      socket.send(content);
-      return false;
+      send({Type: 'chat', Data: $(this).text()});
     });
+  });
+
+  $('#btn-pvpRoom').click(function() {
+    send({Type: 'enterRoom', Data: 'pvp'});
+  });
+  $('#btn-pveRoom').click(function() {
+    send({Type: 'enterRoom', Data: 'pve'});
+  });
+  $('#btn-exitRoom').click(function() {
+    send({Type: 'exitRoom', Data: ''});
+  });
+  $('#btn-start').click(function() {
+    send({Type: 'start', Data: ''});
+  });
+  $('#btn-giveUp').click(function() {
+    send({Type: 'giveUp', Data: ''});
   });
 });
 
@@ -66,4 +81,8 @@ function refreshPanel() {
 
 function refreshRoomList() {
   var rooms = $('#list-room');
+}
+
+function send(msg) {
+  socket.send(JSON.stringify(msg));
 }

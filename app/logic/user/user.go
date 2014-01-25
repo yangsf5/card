@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/yangsf5/card/app/logic/hall"
 	"github.com/yangsf5/card/app/logic/proto"
+//	"github.com/yangsf5/card/app/logic/room"
 )
 
 type User struct {
@@ -31,9 +32,9 @@ func (u *User) Tick() {
 				u.Logout("Recv channel closed")
 				return
 			}
-			fmt.Println("User recv:", msg)
-			chatMsg := &proto.HCChat{u.Name, msg}
-			hall.Broadcast(proto.Encode(chatMsg))
+			pack := proto.Decode(msg)
+			fmt.Println("User recv:", pack.Type, pack.Data)
+			u.handle(pack.Type, pack.Data)
 		case err, ok := <-u.Offline:
 			if !ok {
 				u.Logout("Offline channel closed")
@@ -62,5 +63,14 @@ func (u *User) Logout(reason string) {
 		close(u.SendMsg)
 		hall.DelUser(u.Name)
 		fmt.Println("User disconneted, err:", reason)
+	}
+}
+
+func (u *User) handle(msgType string, msgData interface{}) {
+	switch msgType {
+	case "chat":
+		chatMsg := &proto.HCChat{u.Name, msgData.(string)}
+		hall.Broadcast(proto.Encode(chatMsg))
+	case "enterRoom":
 	}
 }
