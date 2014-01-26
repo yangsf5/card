@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/yangsf5/card/app/logic/hall"
 	"github.com/yangsf5/card/app/logic/proto"
-//	"github.com/yangsf5/card/app/logic/room"
+	"github.com/yangsf5/card/app/logic/room"
 )
 
 type User struct {
@@ -16,6 +16,8 @@ type User struct {
 	Offline <-chan error
 
 	disconnected bool
+
+	curRoom *room.Room
 }
 
 func NewUser(name string, recv <-chan string, send chan<- string, offline <-chan error) *User {
@@ -72,5 +74,10 @@ func (u *User) handle(msgType string, msgData interface{}) {
 		chatMsg := &proto.HCChat{u.Name, msgData.(string)}
 		hall.Broadcast(proto.Encode(chatMsg))
 	case "enterRoom":
+		/*
+		u.curRoom = room.Enter(msgData.(string), u.Name, u)
+		if u.curRoom != nil {
+		}
+		*/
 	}
 }

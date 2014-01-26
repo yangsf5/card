@@ -16,11 +16,13 @@ type FightRoom struct {
 }
 
 func (r *FightRoom) Start(uid string) net.User {
+	/*
 	for k, v := range r.GetUsers() {
 		if _, ok := v.(FightUser); ok && k != uid {
 			//TODO
 			return v
 		}
 	}
+	*/
 	return nil
 }

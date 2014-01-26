@@ -2,26 +2,38 @@
 
 package net
 
+import (
+	"sync"
+)
+
 type User interface {
 	Send(string)
 }
 
 type Group struct {
 	users map[string] User
+	mutex sync.RWMutex
 
 	broadcast chan string
+
+	//TODO check
+	cmd chan string
 }
 
 func NewGroup() *Group {
 	g := &Group{}
 	g.users = make(map[string] User)
 	g.broadcast = make(chan string)
+	g.cmd = make(chan string)
 
 	go g.tick()
 	return g
 }
 
 func (g *Group) AddUser(uid string, u User) bool {
+	g.mutex.Lock()
+	defer g.mutex.Unlock()
+
 	if _, ok := g.users[uid]; ok {
 		return false
 	}
@@ -30,22 +42,52 @@ func (g *Group) AddUser(uid string, u User) bool {
 }
 
 func (g *Group) DelUser(uid string) {
+	g.mutex.Lock()
+	defer g.mutex.Unlock()
+
 	delete(g.users, uid)
 }
 
-func (g *Group) GetUsers() map[string] User{
-	return g.users
+type WalkFunc func(uid string, u User)
+
+func (g *Group) Walk(walkFn WalkFunc) {
+	g.mutex.RLock()
+	defer g.mutex.RUnlock()
+
+	for k, v := range g.users {
+		walkFn(k, v)
+	}
 }
 
 func (g *Group) Broadcast(msg string) {
 	g.broadcast <- msg
 }
 
+func (g *Group) SendCommand(cmd string) {
+	g.cmd <- cmd
+}
+
+func (g *Group) Close() {
+	close(g.broadcast)
+	close(g.cmd)
+}
+
 func (g *Group) tick() {
 	for {
-		msg := <-g.broadcast
-		for _, u := range g.users {
-			u.Send(msg)
+		select {
+		case msg, ok := <-g.broadcast:
+			if !ok {
+				return
+			}
+
+			g.Walk(func(uid string, u User) {
+				u.Send(msg)
+			})
+
+		case _, ok := <-g.cmd:
+			if !ok {
+				return
+			}
 		}
 	}
 }
