@@ -18,3 +18,7 @@ type Room struct {
 type HCRoomList struct {
 	Rooms []Room
 }
+
+type HCEnter struct {
+	RoomName string
+}

@@ -65,6 +65,9 @@ func (u *User) Logout(reason string) {
 		u.disconnected = true
 		close(u.SendMsg)
 		hall.DelUser(u.Name)
+		if u.curRoom != nil {
+			u.curRoom.DelUser(u.Name)
+		}
 		fmt.Println("User disconneted, err:", reason)
 	}
 }

@@ -4,6 +4,7 @@ package room
 
 import (
 	"github.com/yangsf5/card/app/engine/net"
+	"github.com/yangsf5/card/app/logic/proto"
 )
 
 type FightUser interface {
@@ -14,18 +15,24 @@ type FightUser interface {
 }
 
 type FightRoom struct {
+	Name string
 	*net.Group
 }
 
 func NewFightRoom() *FightRoom {
 	room := &FightRoom {
+		"pvp",
 		net.NewGroup(),
 	}
 	return room
 }
 
 func (r *FightRoom) Enter(uid string, u FightUser) bool {
-	return r.AddUser(uid, u)
+	if(r.AddUser(uid, u)) {
+		u.Send(proto.Encode(&proto.HCEnter{r.Name}))
+		return true
+	}
+	return false
 }
 
 func (r *FightRoom) Leave(uid string) {
