@@ -8,21 +8,39 @@ import (
 
 type FightUser interface {
 	net.User
-	GetLevel() int
+	//GetLevel() int
+	SetEnemy(FightUser)
+	GetEnemy() FightUser
 }
 
 type FightRoom struct {
-	Room
+	*net.Group
 }
 
-func (r *FightRoom) Start(uid string) net.User {
-	/*
-	for k, v := range r.GetUsers() {
-		if _, ok := v.(FightUser); ok && k != uid {
-			//TODO
-			return v
-		}
+func NewFightRoom() *FightRoom {
+	room := &FightRoom {
+		net.NewGroup(),
 	}
-	*/
-	return nil
+	return room
+}
+
+func (r *FightRoom) Enter(uid string, u FightUser) bool {
+	return r.AddUser(uid, u)
+}
+
+func (r *FightRoom) Leave(uid string) {
+	r.DelUser(uid)
+}
+
+func (r *FightRoom) Start(uid string) {
+	_, enemy := r.Find(func(id string, user net.User) bool {
+		fightUser, ok := user.(FightUser);
+		return ok && id != uid && fightUser.GetEnemy() == nil
+	})
+
+	if user := r.GetUser(uid); user != nil {
+		user.(FightUser).SetEnemy(enemy.(FightUser))
+	}
+
+	return
 }

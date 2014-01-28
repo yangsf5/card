@@ -17,7 +17,8 @@ type User struct {
 
 	disconnected bool
 
-	curRoom *room.Room
+	curRoom *room.FightRoom
+	enemy room.FightUser
 }
 
 func NewUser(name string, recv <-chan string, send chan<- string, offline <-chan error) *User {
@@ -74,10 +75,18 @@ func (u *User) handle(msgType string, msgData interface{}) {
 		chatMsg := &proto.HCChat{u.Name, msgData.(string)}
 		hall.Broadcast(proto.Encode(chatMsg))
 	case "enterRoom":
-		/*
-		u.curRoom = room.Enter(msgData.(string), u.Name, u)
-		if u.curRoom != nil {
+		switch msgData.(string) {
+		case "pvp":
+			u.curRoom = room.EnterFightRoom(u.Name, u)
+		case "pve":
 		}
-		*/
 	}
+}
+
+func (u *User) SetEnemy(enemy room.FightUser) {
+	u.enemy = enemy
+}
+
+func (u *User) GetEnemy() room.FightUser {
+	return u.enemy
 }

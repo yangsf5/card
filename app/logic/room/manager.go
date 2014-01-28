@@ -3,22 +3,31 @@
 package room
 
 import (
-	"github.com/yangsf5/card/app/engine/net"
+//	"github.com/yangsf5/card/app/engine/net"
 )
 
 var (
-	fightRoom FightRoom
+	fightRoom *FightRoom
 )
 
 func init() {
-	//fightRoom FightRoom
+	fightRoom = NewFightRoom()
 }
 
-func Enter(roomType string, uid string, u net.User) *FightRoom {
+/*
+func Enter(roomType string, uid string, u net.User) Room {
 	switch roomType {
 	case "pvp":
-		fightRoom.Enter(uid, u)
-		return &fightRoom
+		if user, ok := u.(FightUser); ok {
+			fightRoom.Enter(uid, user)
+			return &fightRoom
+		}
 	}
 	return nil
+}
+*/
+
+func EnterFightRoom(uid string, u FightUser) *FightRoom {
+	fightRoom.Enter(uid, u)
+	return fightRoom
 }

@@ -2,29 +2,14 @@
 
 package room
 
+/*
 import (
 	"github.com/yangsf5/card/app/engine/net"
 )
 
-func init() {
+type Room interface {
+	Enter(uid string, u net.User) bool
+	Leave(uid string)
+	Start(uid string)
 }
-
-type Room struct {
-	net.Group
-}
-
-func NewRoom() *Room {
-	room := &Room{}
-	return room
-}
-
-func (r *Room) Enter(uid string, u net.User) bool {
-	ret := r.AddUser(uid, u)
-	if ret {
-	}
-	return ret
-}
-
-func (r *Room) Leave(uid string) {
-	r.DelUser(uid)
-}
+*/
