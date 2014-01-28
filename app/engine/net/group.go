@@ -41,6 +41,17 @@ func (g *Group) AddUser(uid string, u User) bool {
 	return true
 }
 
+func (g *Group) GetUser(uid string) User {
+	g.mutex.RLock()
+	defer g.mutex.RUnlock()
+
+	user, ok := g.users[uid]
+	if ok {
+		return user
+	}
+	return nil
+}
+
 func (g *Group) DelUser(uid string) {
 	g.mutex.Lock()
 	defer g.mutex.Unlock()
@@ -57,6 +68,21 @@ func (g *Group) Walk(walkFn WalkFunc) {
 	for k, v := range g.users {
 		walkFn(k, v)
 	}
+}
+
+type CondFunc func(uid string, u User) bool
+
+func (g *Group) Find(condFn CondFunc) (uid string, u User) {
+	g.mutex.RLock()
+	defer g.mutex.RUnlock()
+
+	for k, v := range g.users {
+		if condFn(k, v) {
+			return k, v
+		}
+	}
+
+	return "", nil
 }
 
 func (g *Group) Broadcast(msg string) {
