@@ -1,0 +1,23 @@
+{{template "header.html" "Card Login"}}
+
+<div class="container">
+
+  <p class="lead">Sign in!</p>
+
+  <div id="signin">
+    <form method="POST" action="/">
+      <div class="input-group">
+        <span class="input-group-addon">@</span>
+        <input type="text" class="form-control" placeholder="Nickname" id="user" name="user">
+      </div>
+      <br>
+
+      <p>
+        <button type="submit" class="btn btn-primary btn-sm" id="enter">Enter the hall</button>
+      </p>
+    </form>
+  </div>
+
+</div>
+
+{{template "footer.html" .}}
