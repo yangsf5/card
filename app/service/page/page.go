@@ -9,6 +9,7 @@ import (
 	"path"
 	"runtime/debug"
 
+	"code.google.com/p/go.net/websocket"
 	"github.com/golang/glog"
 )
 
@@ -75,10 +76,19 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func staticDirHandler(mux *http.ServeMux, prefix string, staticDir string) {
+	mux.HandleFunc(prefix, func(w http.ResponseWriter, r *http.Request) {
+		file := staticDir + r.URL.Path[len(prefix)-1:]
+		http.ServeFile(w, r, file)
+	})
+}
+
 func Start() {
 	mux := http.NewServeMux()
+	staticDirHandler(mux, "/public/js/", "./public/js/")
 	mux.HandleFunc("/", safeHandler(indexHandler))
 	mux.HandleFunc("/hall/hall", safeHandler(hallHandler))
+	mux.Handle("/hall/hall/socket", websocket.Handler(hallSocketHandler))
 	err := http.ListenAndServe(":2014", mux)
 	checkError(err)
 }
