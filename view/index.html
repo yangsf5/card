@@ -1,18 +1,11 @@
-{{set . "title" "Card Login"}}
-{{template "header.html" .}}
+{{template "header.html" "Card Login"}}
 
 <div class="container">
 
   <p class="lead">Sign in!</p>
 
   <div id="signin">
-    <form action="{{url "App.SignIn"}}">
-      {{if .flash.error}}
-        <p class="text-danger">
-          {{.flash.error}}
-        </p>
-      {{end}}
-
+    <form method="POST" action="/">
       <div class="input-group">
         <span class="input-group-addon">@</span>
         <input type="text" class="form-control" placeholder="Nickname" id="user" name="user">
