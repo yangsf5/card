@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/yangsf5/card/util"
+	"github.com/yangsf5/card/app/util"
 )
 
 type RoomConfig struct {

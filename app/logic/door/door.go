@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	hall.ReadConfig("conf/room.xml")
+	hall.ReadConfig("config/room.xml")
 }
 
 func Login(conn *websocket.Conn, userName string) {

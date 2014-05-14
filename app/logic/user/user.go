@@ -49,10 +49,10 @@ func (u *User) Tick() {
 	}
 }
 
-func (u *User) Send(msg string) {
+func (u *User) Send(msg []byte) {
 	if !u.disconnected {
-		u.SendMsg <- msg
-		fmt.Println("User send:", msg)
+		u.SendMsg <- string(msg)
+		fmt.Println("User send:", string(msg))
 	}
 }
 
@@ -66,7 +66,7 @@ func (u *User) Logout(reason string) {
 		close(u.SendMsg)
 		hall.DelUser(u.Name)
 		if u.curRoom != nil {
-			u.curRoom.DelUser(u.Name)
+			u.curRoom.Leave(u.Name)
 		}
 		fmt.Println("User disconneted, err:", reason)
 	}
