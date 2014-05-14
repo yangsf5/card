@@ -5,4 +5,4 @@ import getopt
 import os
 import sys
 
-os.system('go run card.go -alsologtostderr=true -config=./conf/server.xml')
+os.system('go run card.go -alsologtostderr=true -config=./config/server.xml')
