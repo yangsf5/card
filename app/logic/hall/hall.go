@@ -4,7 +4,7 @@ package hall
 
 import (
 	"fmt"
-	"github.com/yangsf5/card/app/engine/net"
+	"github.com/yangsf5/claw/engine/net"
 	"github.com/yangsf5/card/app/logic/proto"
 )
 
@@ -16,8 +16,8 @@ func init() {
 	group = net.NewGroup()
 }
 
-func Enter(uid string, u net.User) bool {
-	ret := group.AddUser(uid, u)
+func Enter(uid string, u net.Peer) bool {
+	ret := group.AddPeer(uid, u)
 	if ret {
 		msg := &proto.HCRoomList{}
 		for k, _ := range configs {
@@ -26,15 +26,15 @@ func Enter(uid string, u net.User) bool {
 		}
 
 		fmt.Println(msg)
-		u.Send(proto.Encode(msg))
+		u.Send([]byte(proto.Encode(msg)))
 	}
 	return ret
 }
 
 func Broadcast(msg string) {
-	group.Broadcast(msg)
+	group.Broadcast([]byte(msg))
 }
 
 func DelUser(uid string) {
-	group.DelUser(uid)
+	group.DelPeer(uid)
 }
