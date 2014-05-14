@@ -7,4 +7,6 @@
 	<harbor id="1"></harbor>
 
 	<gate listenAddr=":9000"></gate>
+
+	<http listenAddr=":2014"></http>
 </clawconfig>

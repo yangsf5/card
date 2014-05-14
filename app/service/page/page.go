@@ -3,6 +3,7 @@
 package page
 
 import (
+	"encoding/xml"
 	"html/template"
 	"io/ioutil"
 	"net/http"
@@ -11,6 +12,7 @@ import (
 
 	"code.google.com/p/go.net/websocket"
 	"github.com/golang/glog"
+	"github.com/yangsf5/claw/center"
 )
 
 const (
@@ -84,12 +86,22 @@ func staticDirHandler(mux *http.ServeMux, prefix string, staticDir string) {
 }
 
 func Start() {
+	type HttpConfig struct {
+		ListenAddr string `xml:"listenAddr,attr"`
+	}
+	type ConfigPack struct {
+		XMLName xml.Name `xml:"clawconfig"`
+		Http HttpConfig `xml:"http"`
+	}
+	var cfg ConfigPack
+	center.GetConfig(&cfg)
+
 	mux := http.NewServeMux()
 	staticDirHandler(mux, "/public/js/", "./public/js/")
 	mux.HandleFunc("/", safeHandler(indexHandler))
 	mux.HandleFunc("/hall/hall", safeHandler(hallHandler))
 	mux.Handle("/hall/hall/socket", websocket.Handler(hallSocketHandler))
-	err := http.ListenAndServe(":2014", mux)
+	err := http.ListenAndServe(cfg.Http.ListenAddr, mux)
 	checkError(err)
 }
 
