@@ -9,6 +9,7 @@ import (
 	"github.com/yangsf5/claw/center"
 	"github.com/yangsf5/claw/service"
 
+	"github.com/yangsf5/card/app/handler"
 	myService "github.com/yangsf5/card/app/service"
 )
 
@@ -20,7 +21,10 @@ func main() {
 
 	service.Register()
 	myService.Register()
-	center.Use([]string{"CardHttp"})
+
+	handler.RegisterHandler()
+
+	center.Use([]string{"Web"})
 
 	for {
 		time.Sleep(100 * time.Millisecond)
