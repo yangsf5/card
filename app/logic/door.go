@@ -1,6 +1,6 @@
 // Author: sheppard(ysf1026@gmail.com) 2013-12-13
 
-package door
+package logic
 
 import (
 	"time"

@@ -9,7 +9,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/yangsf5/claw/service/web"
 
-	"github.com/yangsf5/card/app/logic/door"
+	"github.com/yangsf5/card/app/logic"
 )
 
 func hallHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,6 +26,6 @@ func hallSocketHandler(ws *websocket.Conn) {
 	userName := ws.Request().FormValue("user")
 	glog.Infof("Hall socket, name=%s", userName)
 
-	door.Login(ws, userName)
+	logic.Login(ws, userName)
 }
 
