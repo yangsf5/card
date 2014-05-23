@@ -21,6 +21,3 @@ _testmain.go
 
 *.exe
 *.swp
-test-results/
-tmp/
-routes/
