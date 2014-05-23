@@ -3,7 +3,6 @@
 package logic
 
 import (
-	"time"
 	"code.google.com/p/go.net/websocket"
 	"github.com/yangsf5/card/app/logic/hall"
 	"github.com/yangsf5/card/app/logic/user"
@@ -57,9 +56,5 @@ func Login(conn *websocket.Conn) {
 	}
 	u.Login()
 	go u.Tick()
-
-	for {
-		time.Sleep(100 * time.Millisecond)
-	}
 }
 

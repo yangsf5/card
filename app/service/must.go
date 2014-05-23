@@ -9,7 +9,7 @@ import (
 
 func Register() {
 	services := map[string]center.Service{
-//		"CardHttp": &Http{},
+		"CardWebsocket": &Websocket{},
 	}
 
 	for name, cb := range services {
