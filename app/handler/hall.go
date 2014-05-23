@@ -26,6 +26,6 @@ func hallSocketHandler(ws *websocket.Conn) {
 	userName := ws.Request().FormValue("user")
 	glog.Infof("Hall socket, name=%s", userName)
 
-	logic.Login(ws, userName)
+	logic.Login(ws)
 }
 

@@ -13,7 +13,9 @@ func init() {
 	hall.ReadConfig("config/room.xml")
 }
 
-func Login(conn *websocket.Conn, userName string) {
+func Login(conn *websocket.Conn) {
+	userName := conn.Request().FormValue("user")
+
 	offline := make(chan error)
 
 	recvMsg := make(chan string)
