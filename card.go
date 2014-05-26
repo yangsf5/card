@@ -24,7 +24,7 @@ func main() {
 
 	handler.RegisterHandler()
 
-	center.Use([]string{"Web", "CardWebsocket"})
+	center.Use([]string{"Web", "CardWebsocket", "CardHall"})
 
 	for {
 		time.Sleep(100 * time.Millisecond)

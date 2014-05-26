@@ -7,8 +7,8 @@ import (
 	"github.com/golang/glog"
 	"github.com/yangsf5/claw/center"
 
-	"github.com/yangsf5/card/app/logic/hall"
 	"github.com/yangsf5/card/app/logic/user"
+	"github.com/yangsf5/card/app/service/hall"
 )
 
 type Websocket struct {
@@ -75,11 +75,6 @@ func (s* Websocket) login(conn *websocket.Conn) {
 	}()
 
 	u := user.NewUser(userName, recvMsg, sendMsg, offline)
-	ok := hall.Enter(u.Name, u)
-	if !ok {
-		return
-	}
-	u.Login()
-	go u.Tick()
+	send("CardWebsocket", "CardHall", 0, center.MsgTypeSystem, u)
 }
 

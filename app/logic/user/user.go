@@ -4,13 +4,13 @@ package user
 
 import (
 	"fmt"
-	"github.com/yangsf5/card/app/logic/hall"
 	"github.com/yangsf5/card/app/logic/proto"
 	"github.com/yangsf5/card/app/logic/room"
+	"github.com/yangsf5/card/app/service/hall"
 )
 
 type User struct {
-	Name string
+	name string
 	RecvMsg <-chan string
 	SendMsg chan<- string
 	Offline <-chan error
@@ -23,8 +23,12 @@ type User struct {
 
 func NewUser(name string, recv <-chan string, send chan<- string, offline <-chan error) *User {
 	u := &User{}
-	u.Name, u.RecvMsg, u.SendMsg, u.Offline = name, recv, send, offline
+	u.name, u.RecvMsg, u.SendMsg, u.Offline = name, recv, send, offline
 	return u
+}
+
+func (u *User) Name() string {
+	return u.name
 }
 
 func (u *User) Tick() {
@@ -57,16 +61,16 @@ func (u *User) Send(msg []byte) {
 }
 
 func (u *User) Login() {
-	fmt.Println("User login, name:", u.Name)
+	fmt.Println("User login, name:", u.name)
 }
 
 func (u *User) Logout(reason string) {
 	if !u.disconnected {
 		u.disconnected = true
 		close(u.SendMsg)
-		hall.DelUser(u.Name)
+		hall.DelUser(u.name)
 		if u.curRoom != nil {
-			u.curRoom.Leave(u.Name)
+			u.curRoom.Leave(u.name)
 		}
 		fmt.Println("User disconneted, err:", reason)
 	}
@@ -75,12 +79,12 @@ func (u *User) Logout(reason string) {
 func (u *User) handle(msgType string, msgData interface{}) {
 	switch msgType {
 	case "chat":
-		chatMsg := &proto.HCChat{u.Name, msgData.(string)}
+		chatMsg := &proto.HCChat{u.name, msgData.(string)}
 		hall.Broadcast(proto.Encode(chatMsg))
 	case "enterRoom":
 		switch msgData.(string) {
 		case "pvp":
-			u.curRoom = room.EnterFightRoom(u.Name, u)
+			u.curRoom = room.EnterFightRoom(u.name, u)
 		case "pve":
 		}
 	}
