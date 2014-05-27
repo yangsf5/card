@@ -24,7 +24,7 @@ func (s* Websocket) ClawCallback(session int, source string, msgType int, msg in
 			s.sessionIdGenerator += 1
 			s.conns[s.sessionIdGenerator] = conn
 
-			s.login(conn)
+			s.login(s.sessionIdGenerator, conn)
 		}
 	}
 }
@@ -37,7 +37,7 @@ func (s* Websocket) ClawStart() {
 func (s* Websocket) AddClient() {
 }
 
-func (s* Websocket) login(conn *websocket.Conn) {
+func (s* Websocket) login(sessionId int, conn *websocket.Conn) {
 	userName := conn.Request().FormValue("user")
 
 	offline := make(chan error)
@@ -74,7 +74,7 @@ func (s* Websocket) login(conn *websocket.Conn) {
 		}
 	}()
 
-	u := user.NewUser(userName, recvMsg, sendMsg, offline)
-	send("CardWebsocket", "CardHall", 0, center.MsgTypeSystem, u)
+	u := user.NewUser(sessionId, userName, recvMsg, sendMsg, offline)
+	send("CardWebsocket", "CardHall", sessionId, center.MsgTypeSystem, u)
 }
 

@@ -5,7 +5,6 @@ package service
 import (
 	"github.com/golang/glog"
 	"github.com/yangsf5/claw/center"
-	"github.com/yangsf5/claw/engine/net"
 
 	"github.com/yangsf5/card/app/service/hall"
 )
@@ -17,8 +16,8 @@ func (s* Hall) ClawCallback(session int, source string, msgType int, msg interfa
 	glog.Infof("Service.CardHall recv type=%v msg=%v", msgType, msg)
 	switch msgType {
 	case center.MsgTypeSystem:
-		if user, ok := msg.(HallUser); ok {
-			if ret := hall.Enter(user.Name(), user); !ret {
+		if user, ok := msg.(hall.User); ok {
+			if ret := hall.Enter(session, user); !ret {
 				glog.Info("Service.CardHall enter hall failed")
 				return
 			}
@@ -33,13 +32,3 @@ func (s* Hall) ClawCallback(session int, source string, msgType int, msg interfa
 func (s* Hall) ClawStart() {
 }
 
-
-//TODO
-type HallUser interface {
-	net.Peer
-	Name() string
-
-	//TODO remove
-	Login()
-	Tick()
-}

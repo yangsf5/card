@@ -3,6 +3,7 @@
 package user
 
 import (
+	"container/list"
 	"fmt"
 	"github.com/yangsf5/card/app/logic/proto"
 	"github.com/yangsf5/card/app/logic/room"
@@ -10,6 +11,7 @@ import (
 )
 
 type User struct {
+	sessionId int
 	name string
 	RecvMsg <-chan string
 	SendMsg chan<- string
@@ -19,12 +21,20 @@ type User struct {
 
 	curRoom *room.FightRoom
 	enemy room.FightUser
+
+	services *list.List
 }
 
-func NewUser(name string, recv <-chan string, send chan<- string, offline <-chan error) *User {
+func NewUser(sessionId int, name string, recv <-chan string, send chan<- string, offline <-chan error) *User {
 	u := &User{}
+	u.sessionId = sessionId
 	u.name, u.RecvMsg, u.SendMsg, u.Offline = name, recv, send, offline
+	u.services = list.New()
 	return u
+}
+
+func (u *User) SessionId() int {
+	return u.sessionId
 }
 
 func (u *User) Name() string {
@@ -68,7 +78,7 @@ func (u *User) Logout(reason string) {
 	if !u.disconnected {
 		u.disconnected = true
 		close(u.SendMsg)
-		hall.DelUser(u.name)
+		u.LeaveAllService()
 		if u.curRoom != nil {
 			u.curRoom.Leave(u.name)
 		}
@@ -97,3 +107,4 @@ func (u *User) SetEnemy(enemy room.FightUser) {
 func (u *User) GetEnemy() room.FightUser {
 	return u.enemy
 }
+
