@@ -51,7 +51,7 @@ func (u *User) Tick() {
 			}
 			pack := proto.Decode(msg)
 			fmt.Println("User recv:", pack.Type, pack.Data)
-			u.handle(pack.Type, pack.Data)
+			u.handle(pack.Service, pack.Type, pack.Data)
 		case err, ok := <-u.Offline:
 			if !ok {
 				u.Logout("Offline channel closed")
@@ -86,11 +86,11 @@ func (u *User) Logout(reason string) {
 	}
 }
 
-func (u *User) handle(msgType string, msgData interface{}) {
+func (u *User) handle(service, msgType string, msgData interface{}) {
 	switch msgType {
 	case "chat":
 		chatMsg := &proto.HCChat{u.name, msgData.(string)}
-		hall.Broadcast(proto.Encode(chatMsg))
+		hall.Broadcast(proto.Encode("Cardhall", chatMsg))
 	case "enterRoom":
 		switch msgData.(string) {
 		case "pvp":

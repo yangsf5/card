@@ -29,7 +29,8 @@ func NewFightRoom() *FightRoom {
 
 func (r *FightRoom) Enter(uid string, u FightUser) bool {
 	if(r.AddPeer(uid, u)) {
-		u.Send([]byte(proto.Encode(&proto.HCEnter{r.Name})))
+		//TODO
+		u.Send([]byte(proto.Encode("", &proto.HCEnter{r.Name})))
 		return true
 	}
 	return false

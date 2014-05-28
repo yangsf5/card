@@ -27,7 +27,7 @@ $(document).ready(function() {
   $.each(btn_chat.children(), function(_, item) {
     var item = $(item);
     item.click(function() {
-      send({Type: 'chat', Data: $(this).text()});
+      send({Service: 'CardHall', Type: 'chat', Data: $(this).text()});
     });
   });
 

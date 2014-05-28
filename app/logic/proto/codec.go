@@ -8,15 +8,16 @@ import (
 )
 
 type Pack struct {
+	Service string
 	Type string
 	Data interface{}
 }
 
-func Encode(v interface{}) string {
+func Encode(service string, v interface{}) string {
 	msgName := reflect.TypeOf(v).String()
 	msgName = msgName[7:] //TODO better way to remove *proto.
 
-	pack := &Pack{msgName, v}
+	pack := &Pack{service, msgName, v}
 	b, err := json.Marshal(pack)
 	if err != nil {
 		panic(err)

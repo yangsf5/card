@@ -41,7 +41,7 @@ func Enter(session int, u User) bool {
 		}
 
 		fmt.Println(msg)
-		u.Send([]byte(proto.Encode(msg)))
+		u.Send([]byte(proto.Encode("CardHall", msg)))
 	}
 	return ret
 }
