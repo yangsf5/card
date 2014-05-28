@@ -15,6 +15,8 @@ type User interface {
 	//TODO remove
 	Login()
 	Tick()
+
+	EnterService(service string)
 }
 
 var (
@@ -30,6 +32,7 @@ func init() {
 func Enter(session int, u User) bool {
 	ret := group.AddPeer(u.Name(), u)
 	if ret {
+		u.EnterService("CardHall")
 		sessions[session] = u
 		msg := &proto.HCRoomList{}
 		for k, _ := range configs {

@@ -26,6 +26,12 @@ func (s* Hall) ClawCallback(session int, source string, msgType int, msg interfa
 		} else {
 			glog.Info("Service.CardHall msg is not a net.Peer")
 		}
+	case center.MsgTypeText:
+		if msg, ok := msg.(string); ok {
+			if msg == "LEAVE" {
+				hall.Leave(session)
+			}
+		}
 	}
 }
 
