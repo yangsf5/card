@@ -4,10 +4,12 @@ package user
 
 import (
 	"container/list"
-	"fmt"
+
+	"github.com/golang/glog"
+	"github.com/yangsf5/claw/center"
+
 	"github.com/yangsf5/card/app/logic/proto"
 	"github.com/yangsf5/card/app/logic/room"
-	"github.com/yangsf5/card/app/service/hall"
 )
 
 type User struct {
@@ -50,8 +52,9 @@ func (u *User) Tick() {
 				return
 			}
 			pack := proto.Decode(msg)
-			fmt.Println("User recv:", pack.Type, pack.Data)
-			u.handle(pack.Service, pack.Type, pack.Data)
+			glog.Infof("User recv, service=%s type=%s data=%v", pack.Service, pack.Type, pack.Data)
+			//u.handle(pack.Service, pack.Type, pack.Data)
+			center.Send("", pack.Service, u.sessionId, center.MsgTypeClient, pack)
 		case err, ok := <-u.Offline:
 			if !ok {
 				u.Logout("Offline channel closed")
@@ -66,12 +69,12 @@ func (u *User) Tick() {
 func (u *User) Send(msg []byte) {
 	if !u.disconnected {
 		u.SendMsg <- string(msg)
-		fmt.Println("User send:", string(msg))
+		glog.Infof("User send, msg=%v", string(msg))
 	}
 }
 
 func (u *User) Login() {
-	fmt.Println("User login, name:", u.name)
+	glog.Infof("User login, name=%s", u.name)
 }
 
 func (u *User) Logout(reason string) {
@@ -82,15 +85,17 @@ func (u *User) Logout(reason string) {
 		if u.curRoom != nil {
 			u.curRoom.Leave(u.name)
 		}
-		fmt.Println("User disconneted, err:", reason)
+		glog.Infof("User disconneted, reason=%s", reason)
 	}
 }
 
+func (u *User) Kick(reason string) {
+	u.Logout(reason)
+}
+
+//TODO remove
 func (u *User) handle(service, msgType string, msgData interface{}) {
 	switch msgType {
-	case "chat":
-		chatMsg := &proto.HCChat{u.name, msgData.(string)}
-		hall.Broadcast(proto.Encode("Cardhall", chatMsg))
 	case "enterRoom":
 		switch msgData.(string) {
 		case "pvp":

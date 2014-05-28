@@ -60,8 +60,9 @@ func (s* Websocket) login(sessionId int, conn *websocket.Conn) {
 		for {
 			select {
 			case msg, ok := <-sendMsg:
-				// If the channel is closed, they disconnected.
+				// If the channel is closed, they disconnected, or we kick them.
 				if !ok {
+					conn.Close()
 					return
 				}
 

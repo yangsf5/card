@@ -15,6 +15,7 @@ type User interface {
 	//TODO remove
 	Login()
 	Tick()
+	Kick(reason string)
 
 	EnterService(service string)
 }

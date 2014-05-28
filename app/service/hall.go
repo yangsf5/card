@@ -7,6 +7,7 @@ import (
 	"github.com/yangsf5/claw/center"
 
 	"github.com/yangsf5/card/app/service/hall"
+	"github.com/yangsf5/card/app/logic/proto"
 )
 
 type Hall struct {
@@ -19,6 +20,7 @@ func (s* Hall) ClawCallback(session int, source string, msgType int, msg interfa
 		if user, ok := msg.(hall.User); ok {
 			if ret := hall.Enter(session, user); !ret {
 				glog.Info("Service.CardHall enter hall failed")
+				user.Kick("Repeated login")
 				return
 			}
 			user.Login()
@@ -31,6 +33,12 @@ func (s* Hall) ClawCallback(session int, source string, msgType int, msg interfa
 			if msg == "LEAVE" {
 				hall.Leave(session)
 			}
+		}
+	case center.MsgTypeClient:
+		if pack, ok := msg.(*proto.Pack); ok {
+			hall.HandleClientMessage(session, pack.Type, pack.Data)
+		} else {
+			glog.Errorf("Service.CardHall MsgTypeClient msg is not a *proto.Pack")
 		}
 	}
 }
