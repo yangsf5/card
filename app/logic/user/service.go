@@ -3,6 +3,8 @@
 package user
 
 import (
+	"runtime/debug"
+	"fmt"
 	"github.com/yangsf5/claw/center"
 )
 
@@ -22,6 +24,8 @@ func (u *User) LeaveService(service string) {
 //TODO
 func (u *User) LeaveAllService() {
 	for e := u.services.Front(); e != nil; {
-		center.Send("", e.Value.(string), u.sessionId, center.MsgTypeText, u)
+		center.Send("", e.Value.(string), u.sessionId, center.MsgTypeText, nil)
+		u.services.Remove(e)
+		fmt.Println(string(debug.Stack()))
 	}
 }

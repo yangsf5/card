@@ -14,7 +14,7 @@ type Hall struct {
 }
 
 func (s* Hall) ClawCallback(session int, source string, msgType int, msg interface{}) {
-	glog.Infof("Service.CardHall recv type=%v msg=%v", msgType, msg)
+	glog.Infof("Service.CardHall recv session=%d type=%v msg=%v", session, msgType, msg)
 	switch msgType {
 	case center.MsgTypeSystem:
 		if user, ok := msg.(hall.User); ok {
