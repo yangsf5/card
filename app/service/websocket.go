@@ -42,12 +42,13 @@ func (s* Websocket) login(sessionId int, conn *websocket.Conn) {
 
 	offline := make(chan error)
 
-	recvMsg := make(chan string)
+	recvMsg := make(chan string, 1024)
 	go func() {
 		var msg string
 		for {
 			err := websocket.Message.Receive(conn, &msg)
 			if err != nil {
+				offline <- err
 				close(recvMsg)
 				return
 			}
@@ -55,12 +56,12 @@ func (s* Websocket) login(sessionId int, conn *websocket.Conn) {
 		}
 	}()
 
-	sendMsg := make(chan string)
+	sendMsg := make(chan string, 1024)
 	go func() {
 		for {
 			select {
 			case msg, ok := <-sendMsg:
-				// If the channel is closed, they disconnected, or we kick them.
+				// If the channel is closed, we kick them.
 				if !ok {
 					conn.Close()
 					return

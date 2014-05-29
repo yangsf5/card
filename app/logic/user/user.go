@@ -48,7 +48,6 @@ func (u *User) Tick() {
 		select {
 		case msg, ok := <-u.RecvMsg:
 			if !ok {
-				u.Logout("Recv channel closed")
 				return
 			}
 			pack := proto.Decode(msg)
@@ -57,7 +56,7 @@ func (u *User) Tick() {
 			center.Send("", pack.Service, u.sessionId, center.MsgTypeClient, pack)
 		case err, ok := <-u.Offline:
 			if !ok {
-				u.Logout("Offline channel closed")
+				u.Logout("Offline client disconnected")
 			} else {
 				u.Logout(err.Error())
 			}
