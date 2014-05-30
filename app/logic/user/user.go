@@ -17,7 +17,7 @@ type User struct {
 	name string
 	RecvMsg <-chan string
 	SendMsg chan<- string
-	Offline <-chan error
+	recvErr, sendErr <-chan error
 
 	disconnected bool
 
@@ -27,10 +27,11 @@ type User struct {
 	services *list.List
 }
 
-func NewUser(sessionId int, name string, recv <-chan string, send chan<- string, offline <-chan error) *User {
+func NewUser(sessionId int, name string, recv <-chan string,  send chan<- string, recvErr, sendErr <-chan error) *User {
 	u := &User{}
 	u.sessionId = sessionId
-	u.name, u.RecvMsg, u.SendMsg, u.Offline = name, recv, send, offline
+	u.name, u.RecvMsg, u.SendMsg = name, recv, send
+	u.recvErr, u.sendErr = recvErr, sendErr
 	u.services = list.New()
 	return u
 }
@@ -48,18 +49,18 @@ func (u *User) Tick() {
 		select {
 		case msg, ok := <-u.RecvMsg:
 			if !ok {
-				return
+				u.RecvMsg = nil
+				break
 			}
 			pack := proto.Decode(msg)
 			glog.Infof("User recv, service=%s type=%s data=%v", pack.Service, pack.Type, pack.Data)
 			//u.handle(pack.Service, pack.Type, pack.Data)
 			center.Send("", pack.Service, u.sessionId, center.MsgTypeClient, pack)
-		case err, ok := <-u.Offline:
-			if !ok {
-				u.Logout("Offline client disconnected")
-			} else {
-				u.Logout(err.Error())
-			}
+		case err, _ := <-u.recvErr:
+			u.Logout(err.Error())
+			return
+		case err, _ := <-u.sendErr:
+			u.Logout(err.Error())
 			return
 		}
 	}

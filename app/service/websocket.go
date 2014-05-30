@@ -40,16 +40,17 @@ func (s* Websocket) AddClient() {
 func (s* Websocket) login(sessionId int, conn *websocket.Conn) {
 	userName := conn.Request().FormValue("user")
 
-	offline := make(chan error)
-
 	recvMsg := make(chan string, 1024)
+	recvErr := make(chan error)
 	go func() {
+		defer close(recvMsg)
+		defer close(recvErr)
+
 		var msg string
 		for {
 			err := websocket.Message.Receive(conn, &msg)
 			if err != nil {
-				offline <- err
-				close(recvMsg)
+				recvErr <- err
 				return
 			}
 			recvMsg <- msg
@@ -57,7 +58,9 @@ func (s* Websocket) login(sessionId int, conn *websocket.Conn) {
 	}()
 
 	sendMsg := make(chan string, 1024)
+	sendErr := make(chan error)
 	go func() {
+		defer close(sendErr)
 		for {
 			select {
 			case msg, ok := <-sendMsg:
@@ -68,15 +71,14 @@ func (s* Websocket) login(sessionId int, conn *websocket.Conn) {
 				}
 
 				if err := websocket.Message.Send(conn, msg); err != nil {
-					// Disconneted.
-					offline <- err
+					sendErr <- err
 					return
 				}
 			}
 		}
 	}()
 
-	u := user.NewUser(sessionId, userName, recvMsg, sendMsg, offline)
+	u := user.NewUser(sessionId, userName, recvMsg, sendMsg, recvErr, sendErr)
 	send("CardWebsocket", "CardHall", sessionId, center.MsgTypeSystem, u)
 }
 
