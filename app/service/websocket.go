@@ -3,7 +3,7 @@
 package service
 
 import (
-	"code.google.com/p/go.net/websocket"
+	"github.com/golang/net/websocket"
 	"github.com/golang/glog"
 	"github.com/yangsf5/claw/center"
 

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"code.google.com/p/go.net/websocket"
+	"github.com/golang/net/websocket"
 	"github.com/golang/glog"
 	"github.com/yangsf5/claw/center"
 	"github.com/yangsf5/claw/service/web"
