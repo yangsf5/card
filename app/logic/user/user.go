@@ -1,5 +1,3 @@
-// Author: sheppard(ysf1026@gmail.com) 2013-12-25
-
 package user
 
 import (

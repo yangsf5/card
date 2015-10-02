@@ -1,7 +1,3 @@
-/*
- * @author sheppard(ysf1027@gmail.com) 2014-01-02
- */
-
 var socket;
 var msgs = [];
 
